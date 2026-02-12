@@ -1,111 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Spreadsheet Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIECA STORE</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
+
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
-      background-image: url('https://raw.githubusercontent.com/yoyogil27/MIECA-STORE/main/Image%20Feb%2011%2C%202026%2C%2007_21_36%20PM.png');
+      background-image: url('icon.png');
       background-size: cover;
       background-position: center;
-      background-repeat: no-repeat;
       background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
     }
 
-    h2 {
+    .app-header {
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 15px;
       text-align: center;
-      margin-top: 30px;
-      color: #333;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      backdrop-filter: blur(10px);
     }
 
     #loginDiv, #appDiv {
-      width: 300px;
-      margin: 50px auto;
-      text-align: center;
-      background: rgba(255,255,255,0.9); /* light background for readability */
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
 
-    input[type=text], input[type=password] {
-      width: 80%;
-      padding: 10px;
+    .card {
+      width: 90%;
+      max-width: 350px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      text-align: center;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
       margin: 10px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 14px;
     }
 
     button {
-      padding: 10px 20px;
-      margin-top: 10px;
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
       border: none;
-      background-color: #007bff;
-      color: #fff;
-      border-radius: 5px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #007bff, #00c6ff);
+      color: white;
+      font-size: 15px;
       cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
+      transition: transform 0.2s, opacity 0.2s;
     }
 
     button:hover {
-      background-color: #0056b3;
       transform: scale(1.05);
+      opacity: 0.9;
     }
 
     #spreadsheetList {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 15px;
-      margin-top: 20px;
+      width: 90%;
+      max-width: 900px;
+      padding: 20px;
     }
 
     .sheet-card {
-      background: rgba(255,255,255,0.85); /* slight transparency, background still visible */
-      width: 200px;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      cursor: pointer;
+      border-radius: 18px;
       text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
       transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .sheet-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
     }
 
-    .sheet-name {
-      font-weight: bold;
-      color: #007bff;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    }
-
-    @media (max-width: 500px) {
-      #loginDiv, #appDiv {
-        width: 90%;
-        padding: 20px;
-      }
-      .sheet-card {
-        width: 90%;
-      }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
+
 <body>
 
-<h2>MIECA STORE</h2>
+<div class="app-header">MIECA STORE</div>
 
 <div id="loginDiv">
-  <input type="text" id="username" placeholder="Username"><br>
-  <input type="password" id="password" placeholder="Password"><br>
-  <button onclick="login()">Login</button>
-  <p id="message" style="color:red;"></p>
+  <div class="card">
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="message" style="color:red;"></p>
+  </div>
 </div>
 
 <div id="appDiv" style="display:none;">
@@ -120,25 +140,28 @@ const users = [
 
 const SHEETS = [
   { name: "ASSETS", url: "https://docs.google.com/spreadsheets/d/1erDAGIMkwp8GORbmGWCCt9cF2lDiVlWIqb7b_M3kRY4/edit?usp=drive_link" },
-  { name: "BLUE UNIFORMS AND MOPPING LIST", url: "https://docs.google.com/spreadsheets/d/18HPbn8i6w1kUHrghk5aGEcbWMuOWFdnUJgRyszYsdPo/edit?usp=drive_link" },
+  { name: "BLUE UNIFORMS", url: "https://docs.google.com/spreadsheets/d/18HPbn8i6w1kUHrghk5aGEcbWMuOWFdnUJgRyszYsdPo/edit?usp=drive_link" },
   { name: "GENERAL STOCK", url: "https://docs.google.com/spreadsheets/d/1DgQZBnRoaXVy0b997w9jMuTBzyJnwvQLwdgJeqCo0tg/edit?usp=drive_link" },
-  { name: "KNIVES,CUTTERS AND CUPS RECORDS", url: "https://docs.google.com/spreadsheets/d/1HwVNUr2tIsF7xUiLQilcjEUPr8XeAvydmdYDOdxXuac/edit?usp=drive_link" },
+  { name: "KNIVES & CUPS", url: "https://docs.google.com/spreadsheets/d/1HwVNUr2tIsF7xUiLQilcjEUPr8XeAvydmdYDOdxXuac/edit?usp=drive_link" },
   { name: "OTHER ITEMS", url: "https://docs.google.com/spreadsheets/d/1IEgV7UJxihQbRux6ptpiC1lvkhYbAV8AfxxtXR18-nc/edit?usp=drive_link" },
-  { name: "PACKAGING ITEMS", url: "https://docs.google.com/spreadsheets/d/188RISHjMnqyRt3Qjd9N8cB7sOuuUz5pXJQDR0qH3kZQ/edit?usp=drive_link" },
-  { name: "REQUEST,STOCK IN AND OUT NOTES", url: "https://docs.google.com/spreadsheets/d/1KHgInvkAd6WgNgtK9GmThAX1HDJ_WmZ-avveB1Qq2YY/edit?usp=drive_link" },
-  { name: "STICKER RECORDS", url: "https://docs.google.com/spreadsheets/d/1FKl1L_PHf54EIqNWZXOyk2teekXe1QH_93Qhae8GX3g/edit?usp=drive_link" },
-  { name: "STORE DAILY RECORDS", url: "https://docs.google.com/spreadsheets/d/1hIG76Woz4arWQakLJ9Kr3PBys-8N7S7yfAKzSq24ZXQ/edit?usp=drive_link" }
+  { name: "PACKAGING", url: "https://docs.google.com/spreadsheets/d/188RISHjMnqyRt3Qjd9N8cB7sOuuUz5pXJQDR0qH3kZQ/edit?usp=drive_link" },
+  { name: "REQUEST NOTES", url: "https://docs.google.com/spreadsheets/d/1KHgInvkAd6WgNgtK9GmThAX1HDJ_WmZ-avveB1Qq2YY/edit?usp=drive_link" },
+  { name: "STICKERS", url: "https://docs.google.com/spreadsheets/d/1FKl1L_PHf54EIqNWZXOyk2teekXe1QH_93Qhae8GX3g/edit?usp=drive_link" },
+  { name: "DAILY RECORDS", url: "https://docs.google.com/spreadsheets/d/1hIG76Woz4arWQakLJ9Kr3PBys-8N7S7yfAKzSq24ZXQ/edit?usp=drive_link" }
 ];
 
 function login() {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
-  const valid = users.some(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
+  const valid = users.some(u =>
+    u.username.toLowerCase() === username.toLowerCase() &&
+    u.password === password
+  );
 
   if (valid) {
     document.getElementById("loginDiv").style.display = "none";
-    document.getElementById("appDiv").style.display = "block";
+    document.getElementById("appDiv").style.display = "flex";
     showSheets();
   } else {
     document.getElementById("message").innerText = "Invalid login!";
@@ -153,14 +176,15 @@ function showSheets() {
     const card = document.createElement("div");
     card.className = "sheet-card";
     card.onclick = () => window.open(sheet.url, "_blank");
-
-    const name = document.createElement("div");
-    name.className = "sheet-name";
-    name.innerText = sheet.name;
-
-    card.appendChild(name);
+    card.innerText = sheet.name;
     container.appendChild(card);
   });
+}
+
+/* Register Service Worker */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("Service Worker Registered"));
 }
 </script>
 
